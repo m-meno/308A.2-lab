@@ -21,7 +21,7 @@
         companion: {
             name: "Leo",
             type: "Cat",
-            leoCompanion: {
+            subCompanion: {
                 name: "Frank",
                 type: "Flea",
                 belongings: ["small hat", "sunglasses"]
@@ -66,25 +66,61 @@
 
 class Adventurer extends Character {
     static ROLES = [`Fighter`, `Healer`, `Wizard`];
-    constructor (name, role) {
+    constructor (name, role = `Fighter`) {
       super(name);
       // Adventurers have specialized roles.
       this.role = role;
       if (!Adventurer.ROLES.includes(this.role)){
         console.log(`Error - not a valid role`);
-      } else {
-        this.role = "Fighter";
-      }
+        this.role = "Fighter";                          
       // Every adventurer starts with a bed and 50 gold coins.
-      this.inventory.push("bedroll", "50 gold coins");
+        } 
+    this.inventory.push("bedroll", "50 gold coins");
     }
     // Adventurers have the ability to scout ahead of them.
     scout () {
       console.log(`${this.name} is scouting ahead...`);
       super.roll();
     }
+
+    duel (opponent) {
+        while (this.health > 50 && opponent.health > 50){
+            let thisRoll = this.roll();
+            let opponentRoll = opponent.roll();
+
+            console.log(`${this.name} rolled ${thisRoll}!`);
+            console.log(`${opponent.name} rolled ${opponentRoll}!`);
+
+            if (thisRoll < opponentRoll){
+              this.health -= 1;                                  //let newThisHealth = this.health - 1; WRONG
+                console.log(`${this.name} lost 1 health. Their new health is ${this.health}`);
+            } else if (opponentRoll < thisRoll) {
+              opponent.health -= 1;                                                      //let newOppHealth = opponent.health - 1; WRONG
+                console.log(`${opponent.name} lost 1 health. Their new health is ${opponent.health}.`);
+            } else {
+                console.log(`Tie - Roll again!`);
+            }
+            console.log(`Results of this round: ${this.name} rolled ${thisRoll} and their health is ${this.health}. ${opponent.name} rolled ${opponentRoll} and their health is ${opponent.health}.`);
+            
+            if (this.health < 50) {
+                console.log(`${this.name}'s health fell below 50! ${opponent.name}, you are the winner of this duel!`);
+            } else if (opponent.health < 50) {
+                console.log(`${opponent.name}'s health fell below 50! ${this.name}, you have won this duel!`);
+            }
+        }      
+     }
     
   }
+
+
+
+//   Create an additional method, duel(), for the Adventurer class with the following functionality:
+// Accept an Adventurer as a parameter.
+// Use the roll() functionality to create opposing rolls for each adventurer.
+// Subtract 1 from the adventurer with the lower roll.
+// Log the results of this “round” of the duel, including the rolls and current health values.
+// Repeat this process until one of the two adventurers reaches 50 health.
+// Log the winner of the duel: the adventurer still above 50 health.
 
   class Companion extends Character {
     constructor(name, type) {
@@ -128,4 +164,5 @@ class AdventurerFactory {
   }
   
   const healers = new AdventurerFactory("Healer");
-  const robin = healers.generate("Robin");
+//   const robin = healers.generate("Robin");
+
