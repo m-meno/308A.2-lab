@@ -41,6 +41,7 @@
  //adventurer.roll()
 
  class Character {
+    static MAX_HEALTH = "100";
     constructor (name) {
         this.name = name;
         this.health = 100;
@@ -50,25 +51,30 @@
         const result = Math.floor(Math.random() * 20) + 1 + mod;
         console.log(`${this.name} rolled a ${result}.`);
     }
-    static MAX_HEALTH = "100";
  }
 
- const robin = new Adventurer("Robin");
-    robin.inventory = ["sword", "potion", "artifact"];
-    robin.companion = new Companion("Leo");
-    robin.companion.type = "Cat";
-    robin.companion.companion = new Companion ("Frank");
-    robin.companion.companion.type = "Flea";
-    robin.companion.companion.inventory = ["small hat", "sunglasses"];
+//  const robin = new Adventurer("Robin");
+//     robin.inventory = ["sword", "potion", "artifact"];
+//     robin.companion = new Companion("Leo");
+//     robin.companion.type = "Cat";
+//     robin.companion.companion = new Companion ("Frank");
+//     robin.companion.companion.type = "Flea";
+//     robin.companion.companion.inventory = ["small hat", "sunglasses"];
 
    
-robin.companion.roll();
+//robin.companion.roll();
 
 class Adventurer extends Character {
+    static ROLES = [`Fighter`, `Healer`, `Wizard`];
     constructor (name, role) {
       super(name);
       // Adventurers have specialized roles.
       this.role = role;
+      if (!Adventurer.ROLES.includes(this.role)){
+        console.log(`Error - not a valid role`);
+      } else {
+        this.role = "Fighter";
+      }
       // Every adventurer starts with a bed and 50 gold coins.
       this.inventory.push("bedroll", "50 gold coins");
     }
@@ -77,7 +83,6 @@ class Adventurer extends Character {
       console.log(`${this.name} is scouting ahead...`);
       super.roll();
     }
-    static ROLES = [`Fighter`, `Healer`, `Wizard`];
     
   }
 
@@ -89,7 +94,38 @@ class Adventurer extends Character {
     }
   }
 
+  const robin = new Adventurer("Robin");
+    robin.inventory = ["sword", "potion", "artifact"];
+    robin.companion = new Companion("Leo");
+    robin.companion.type = "Cat";
+    robin.companion.companion = new Companion ("Frank");
+    robin.companion.companion.type = "Flea";
+    robin.companion.companion.inventory = ["small hat", "sunglasses"];
+
+
+ 
 //   Using the static keyword:
 // Add a static MAX_HEALTH property to the Character class, equal to 100.
 // Add a static ROLES array to the Adventurer class, with the values “Fighter,” “Healer,” and “Wizard.” Feel free to add other roles, if you desire!
 // Add a check to the constructor of the Adventurer class that ensures the given role matches one of these values.
+
+
+class AdventurerFactory {  
+    constructor (role) {
+      this.role = role;
+      this.adventurers = [];
+    }
+    generate (name) {
+      const newAdventurer = new Adventurer(name, this.role);
+      this.adventurers.push(newAdventurer);
+    }
+    findByIndex (index) {
+      return this.adventurers[index];
+    }
+    findByName (name) {
+      return this.adventurers.find((a) => a.name === name);
+    }
+  }
+  
+  const healers = new AdventurerFactory("Healer");
+  const robin = healers.generate("Robin");
